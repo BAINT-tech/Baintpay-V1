@@ -1,610 +1,417 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserProvider } from 'ethers';
-import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
-import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
-import axios from 'axios';
-import './index.css';
 
-const API_URL = 'http://localhost:4000';
+// Styles
+const styles = `
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+    color: white;
+    min-height: 100vh;
+  }
+`;
 
-// Utility data
-const ELECTRICITY_PROVIDERS = {
-  nigeria: [
-    { id: 'ikedc', name: 'Ikeja Electric (IKEDC)', icon: '⚡' },
-    { id: 'ekedc', name: 'Eko Electric (EKEDC)', icon: '⚡' },
-    { id: 'aedc', name: 'Abuja Electric (AEDC)', icon: '⚡' },
-    { id: 'phed', name: 'Port Harcourt Electric (PHED)', icon: '⚡' },
+// Mock Products Data
+const PRODUCTS = {
+  utilities: [
+    { id: 'elec1', name: '⚡ Pay Electricity Bill', type: 'utility', price: 'Variable' }
   ],
-  kenya: [
-    { id: 'kplc', name: 'Kenya Power (KPLC)', icon: '⚡' },
+  streaming: [
+    { id: '1', name: 'Netflix Premium', price: 15.99 },
+    { id: '2', name: 'Spotify Premium', price: 10.99 },
+    { id: '3', name: 'YouTube Premium', price: 11.99 },
+    { id: '4', name: 'Disney+', price: 7.99 },
   ],
-  ghana: [
-    { id: 'ecg', name: 'ECG Ghana', icon: '⚡' },
+  gaming: [
+    { id: '5', name: 'Roblox 1000 Robux', price: 9.99 },
+    { id: '6', name: 'PUBG 1800 UC', price: 24.99 },
+    { id: '7', name: 'Free Fire Diamonds', price: 19.99 },
+    { id: '8', name: 'Steam $20', price: 20.00 },
   ],
-  southafrica: [
-    { id: 'eskom', name: 'Eskom', icon: '⚡' },
-    { id: 'citypower', name: 'City Power Johannesburg', icon: '⚡' },
+  social: [
+    { id: '9', name: 'TikTok 1000 Coins', price: 12.99 },
+    { id: '10', name: 'X Premium', price: 8.00 },
+    { id: '11', name: 'Discord Nitro', price: 9.99 },
+  ],
+  ai: [
+    { id: '12', name: 'OpenAI $50 Credits', price: 50.00 },
+    { id: '13', name: 'Claude API $50', price: 50.00 },
+    { id: '14', name: 'GitHub Copilot', price: 10.00 },
   ],
 };
 
-// Wallet Connect Component
-function WalletConnect({ onConnect, isConnected, address, chain, onDisconnect }) {
-  const [showMenu, setShowMenu] = useState(false);
-  const [provider, setProvider] = useState(null);
-  
-  const { publicKey, disconnect: solanaDisconnect } = useWallet();
-
-  useEffect(() => {
-    if (publicKey) {
-      onConnect('solana', publicKey.toBase58());
-    }
-  }, [publicKey]);
-
-  const connectMetaMask = async (chainId) => {
-    if (!window.ethereum) {
-      alert('Please install MetaMask!');
-      return;
-    }
-
-    try {
-      const provider = new BrowserProvider(window.ethereum);
-      const accounts = await provider.send('eth_requestAccounts', []);
-      const chainName = chainId === 'bnb' ? 'bnb' : chainId === 'base' ? 'base' : 'avalanche';
-      
-      onConnect(chainName, accounts[0]);
-      setProvider(provider);
-      setShowMenu(false);
-    } catch (error) {
-      console.error('MetaMask connection error:', error);
-      alert('Failed to connect MetaMask');
-    }
-  };
-
-  const handleDisconnect = () => {
-    if (chain === 'solana') {
-      solanaDisconnect();
-    }
-    onDisconnect();
-    setProvider(null);
-  };
-
-  if (isConnected) {
-    return (
-      <div className="flex items-center gap-3">
-        <div className="px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-lg">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm font-mono">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
-            <span className="text-xs text-gray-400">({chain.toUpperCase()})</span>
-          </div>
-        </div>
-        <button
-          onClick={handleDisconnect}
-          className="px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-all text-sm"
-        >
-          Disconnect
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative">
-      <button
-        onClick={() => setShowMenu(!showMenu)}
-        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all font-semibold"
-      >
-        🔗 Connect Wallet
-      </button>
-
-      {showMenu && (
-        <div className="absolute right-0 mt-2 w-64 bg-slate-800 border border-purple-500/30 rounded-lg shadow-xl z-50">
-          <div className="p-2">
-            <button
-              onClick={() => connectMetaMask('bnb')}
-              className="w-full px-4 py-3 text-left hover:bg-purple-500/20 transition-all rounded-lg flex items-center gap-3"
-            >
-              <span className="text-2xl">💎</span>
-              <div>
-                <div className="font-semibold">BNB Chain</div>
-                <div className="text-xs text-gray-400">MetaMask / Trust Wallet</div>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => connectMetaMask('base')}
-              className="w-full px-4 py-3 text-left hover:bg-purple-500/20 transition-all rounded-lg flex items-center gap-3"
-            >
-              <span className="text-2xl">🔵</span>
-              <div>
-                <div className="font-semibold">Base</div>
-                <div className="text-xs text-gray-400">MetaMask / Coinbase</div>
-              </div>
-            </button>
-
-            <div className="px-4 py-2">
-              <WalletMultiButton className="!bg-purple-600 !rounded-lg !w-full" />
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Electricity Bill Payment Modal
-function ElectricityModal({ isOpen, onClose, walletAddress, chain }) {
-  const [country, setCountry] = useState('nigeria');
-  const [provider, setProvider] = useState('');
-  const [meterNumber, setMeterNumber] = useState('');
-  const [amount, setAmount] = useState('');
+// Main App
+function App() {
+  const [wallet, setWallet] = useState(null);
+  const [tab, setTab] = useState('utilities');
+  const [modal, setModal] = useState(null);
+  const [billModal, setBillModal] = useState(false);
   const [step, setStep] = useState('form');
 
-  const handlePay = async () => {
-    if (!meterNumber || !amount) {
-      alert('Please fill all fields');
+  // Connect Wallet
+  const connectWallet = async () => {
+    if (!window.ethereum) {
+      alert('Please install MetaMask or Trust Wallet!');
       return;
     }
-
-    setStep('processing');
-
     try {
-      const order = await axios.post(`${API_URL}/api/orders/create`, {
-        productId: 'utility-electricity',
-        chain: chain,
-        tokenSymbol: chain === 'bnb' ? 'BNB' : chain === 'solana' ? 'SOL' : 'ETH',
-        fromAddress: walletAddress,
-        metadata: {
-          type: 'electricity',
-          country,
-          provider,
-          meterNumber,
-          amount,
-        }
-      });
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      setWallet(accounts[0]);
+    } catch (e) {
+      alert('Failed to connect wallet');
+    }
+  };
 
-      setStep('confirming');
-      
-      await axios.post(`${API_URL}/api/payments/monitor`, {
-        orderId: order.data.orderId,
-        txHash: '0xdemo' + Date.now()
-      });
-
-      setTimeout(() => setStep('success'), 3000);
-    } catch (error) {
-      alert('Payment failed: ' + error.message);
+  // Buy Product
+  const buy = (product) => {
+    if (!wallet) {
+      alert('Connect wallet first!');
+      return;
+    }
+    if (product.type === 'utility') {
+      setBillModal(true);
+    } else {
+      setModal(product);
       setStep('form');
     }
   };
 
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-900 border border-purple-500/30 rounded-2xl max-w-md w-full p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">💡 Pay Electricity Bill</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl">×</button>
-        </div>
-
-        {step === 'form' && (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold mb-2">Country</label>
-              <select
-                value={country}
-                onChange={(e) => {
-                  setCountry(e.target.value);
-                  setProvider('');
-                }}
-                className="w-full p-3 bg-white/5 border border-white/10 rounded-lg"
-              >
-                <option value="nigeria">🇳🇬 Nigeria</option>
-                <option value="kenya">🇰🇪 Kenya</option>
-                <option value="ghana">🇬🇭 Ghana</option>
-                <option value="southafrica">🇿🇦 South Africa</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-2">Provider</label>
-              <select
-                value={provider}
-                onChange={(e) => setProvider(e.target.value)}
-                className="w-full p-3 bg-white/5 border border-white/10 rounded-lg"
-              >
-                <option value="">Select provider...</option>
-                {ELECTRICITY_PROVIDERS[country]?.map(p => (
-                  <option key={p.id} value={p.id}>{p.icon} {p.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-2">Meter Number</label>
-              <input
-                type="text"
-                value={meterNumber}
-                onChange={(e) => setMeterNumber(e.target.value)}
-                placeholder="Enter meter number"
-                className="w-full p-3 bg-white/5 border border-white/10 rounded-lg"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-2">Amount (USD)</label>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="Enter amount"
-                className="w-full p-3 bg-white/5 border border-white/10 rounded-lg"
-              />
-            </div>
-
-            <button
-              onClick={handlePay}
-              className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-lg hover:from-purple-500 hover:to-pink-500 transition-all"
-            >
-              Pay ${amount || '0'} with Crypto
-            </button>
-          </div>
-        )}
-
-        {step === 'processing' && (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <h3 className="text-xl font-bold mb-2">Processing Payment...</h3>
-          </div>
-        )}
-
-        {step === 'confirming' && (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <h3 className="text-xl font-bold mb-2">Confirming...</h3>
-            <p className="text-gray-400">Crediting your meter</p>
-          </div>
-        )}
-
-        {step === 'success' && (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">✓</div>
-            <h3 className="text-xl font-bold text-green-400 mb-2">Payment Successful!</h3>
-            <div className="bg-white/5 rounded-xl p-4 my-4">
-              <p className="text-sm text-gray-400 mb-2">${amount} credited to:</p>
-              <p className="text-lg font-mono font-bold">{meterNumber}</p>
-            </div>
-            <button
-              onClick={onClose}
-              className="w-full py-3 bg-green-600 rounded-xl font-semibold hover:bg-green-500 transition-all"
-            >
-              Done
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// Product Payment Modal
-function ProductModal({ isOpen, onClose, product, walletAddress, chain }) {
-  const [step, setStep] = useState('select');
-
-  const handlePay = async () => {
+  // Pay
+  const pay = () => {
     setStep('processing');
-    
-    try {
-      const order = await axios.post(`${API_URL}/api/orders/create`, {
-        productId: product.id,
-        chain: chain,
-        tokenSymbol: chain === 'bnb' ? 'BNB' : chain === 'solana' ? 'SOL' : 'ETH',
-        fromAddress: walletAddress,
-      });
-
-      setStep('confirming');
-      
-      await axios.post(`${API_URL}/api/payments/monitor`, {
-        orderId: order.data.orderId,
-        txHash: '0xdemo' + Date.now()
-      });
-
-      setTimeout(() => setStep('success'), 3000);
-    } catch (error) {
-      alert('Payment failed: ' + error.message);
-      setStep('select');
-    }
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-900 border border-purple-500/30 rounded-2xl max-w-md w-full p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Complete Payment</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl">×</button>
-        </div>
-
-        <div className="bg-white/5 rounded-xl p-4 mb-4">
-          <h3 className="font-bold mb-1">{product.name}</h3>
-          <p className="text-sm text-gray-400 mb-3">{product.provider}</p>
-          <div className="flex justify-between items-center pt-3 border-t border-white/10">
-            <span className="text-gray-400">Total</span>
-            <span className="text-2xl font-bold text-green-400">${product.price_usd}</span>
-          </div>
-        </div>
-
-        {step === 'select' && (
-          <button
-            onClick={handlePay}
-            className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-lg hover:from-purple-500 hover:to-pink-500 transition-all"
-          >
-            Pay ${product.price_usd}
-          </button>
-        )}
-
-        {step === 'processing' && (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <h3 className="text-xl font-bold mb-2">Processing...</h3>
-          </div>
-        )}
-
-        {step === 'confirming' && (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <h3 className="text-xl font-bold mb-2">Confirming...</h3>
-          </div>
-        )}
-
-        {step === 'success' && (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">✓</div>
-            <h3 className="text-xl font-bold text-green-400 mb-2">Success!</h3>
-            <div className="bg-white/5 rounded-xl p-4 my-4">
-              <p className="text-sm text-gray-400 mb-2">Your Code:</p>
-              <p className="text-2xl font-mono font-bold">XXXX-YYYY-ZZZZ</p>
-            </div>
-            <button
-              onClick={onClose}
-              className="w-full py-3 bg-green-600 rounded-xl font-semibold hover:bg-green-500 transition-all"
-            >
-              Done
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// Main App
-function AppContent() {
-  const [products, setProducts] = useState([]);
-  const [activeTab, setActiveTab] = useState('utilities');
-  const [isConnected, setIsConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState('');
-  const [selectedChain, setSelectedChain] = useState('');
-  const [showElectricityModal, setShowElectricityModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-
-  useEffect(() => {
-    loadProducts();
-  }, [activeTab]);
-
-  const loadProducts = async () => {
-    try {
-      const category = activeTab === 'utilities' ? 'mobile' : activeTab;
-      const response = await axios.get(`${API_URL}/api/products`, { params: { category } });
-      setProducts(response.data.products || []);
-    } catch (error) {
-      console.error('Error loading products:', error);
-    }
-  };
-
-  const handleConnect = (chain, address) => {
-    setIsConnected(true);
-    setSelectedChain(chain);
-    setWalletAddress(address);
-  };
-
-  const handleDisconnect = () => {
-    setIsConnected(false);
-    setWalletAddress('');
-    setSelectedChain('');
-  };
-
-  const handleBuy = (product) => {
-    if (!isConnected) {
-      alert('Please connect your wallet first!');
-      return;
-    }
-    setSelectedProduct(product);
+    setTimeout(() => setStep('confirming'), 2000);
+    setTimeout(() => setStep('success'), 4000);
   };
 
   const tabs = [
-    { id: 'utilities', label: 'Utilities', icon: '💡' },
-    { id: 'streaming', label: 'Streaming', icon: '🎬' },
-    { id: 'gaming', label: 'Gaming', icon: '🎮' },
-    { id: 'social', label: 'Social', icon: '💬' },
-    { id: 'ai', label: 'AI Tools', icon: '🤖' },
-    { id: 'mobile', label: 'Mobile', icon: '📱' },
+    { id: 'utilities', label: '💡 Utilities' },
+    { id: 'streaming', label: '🎬 Streaming' },
+    { id: 'gaming', label: '🎮 Gaming' },
+    { id: 'social', label: '💬 Social' },
+    { id: 'ai', label: '🤖 AI Tools' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
-      {/* Header */}
-      <header className="border-b border-purple-500/20 backdrop-blur-sm bg-black/20 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center text-2xl">
-                💎
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">BaintWallet</h1>
-                <p className="text-xs text-gray-400">Pay Bills with Crypto</p>
-              </div>
-            </div>
-
-            <WalletConnect
-              onConnect={handleConnect}
-              isConnected={isConnected}
-              address={walletAddress}
-              chain={selectedChain}
-              onDisconnect={handleDisconnect}
-            />
+    <>
+      <style>{styles}</style>
+      
+      <div style={{ minHeight: '100vh', padding: '16px' }}>
+        {/* Header */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '24px',
+          padding: '16px',
+          background: 'rgba(0,0,0,0.3)',
+          borderRadius: '12px',
+          border: '1px solid rgba(168,85,247,0.3)'
+        }}>
+          <div>
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>💎 BaintWallet</h1>
+            <p style={{ fontSize: '12px', color: '#9ca3af' }}>Pay Bills with Crypto</p>
           </div>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className="container mx-auto px-4 py-12 text-center">
-        <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-          Pay Everything with Crypto
-        </h2>
-        <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-          Electricity bills, streaming, gaming, and more. Multi-chain payments across Africa and beyond.
-        </p>
-      </section>
-
-      {/* Tabs */}
-      <section className="container mx-auto px-4">
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap ${
-                activeTab === tab.id
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600'
-                  : 'bg-white/5 hover:bg-white/10'
-              }`}
+          {!wallet ? (
+            <button 
+              onClick={connectWallet}
+              style={{
+                padding: '12px 20px',
+                background: 'linear-gradient(135deg, #9333ea, #ec4899)',
+                border: 'none',
+                borderRadius: '8px',
+                color: 'white',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+              }}
             >
-              {tab.icon} {tab.label}
+              Connect
+            </button>
+          ) : (
+            <div style={{
+              padding: '8px 12px',
+              background: 'rgba(34,197,94,0.2)',
+              border: '1px solid rgba(34,197,94,0.3)',
+              borderRadius: '8px',
+              fontSize: '12px'
+            }}>
+              {wallet.slice(0,6)}...{wallet.slice(-4)}
+            </div>
+          )}
+        </div>
+
+        {/* Hero */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '16px' }}>
+            Pay Everything with Crypto
+          </h2>
+          <p style={{ color: '#d1d5db' }}>
+            Electricity bills, streaming, gaming & more
+          </p>
+        </div>
+
+        {/* Tabs */}
+        <div style={{ 
+          display: 'flex', 
+          gap: '8px', 
+          overflowX: 'auto',
+          marginBottom: '24px',
+          paddingBottom: '8px'
+        }}>
+          {tabs.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              style={{
+                padding: '12px 16px',
+                background: tab === t.id 
+                  ? 'linear-gradient(135deg, #9333ea, #ec4899)' 
+                  : 'rgba(255,255,255,0.1)',
+                border: 'none',
+                borderRadius: '8px',
+                color: 'white',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {t.label}
             </button>
           ))}
         </div>
 
-        {/* Utilities Section */}
-        {activeTab === 'utilities' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-            <button
-              onClick={() => {
-                if (!isConnected) {
-                  alert('Connect wallet first!');
-                  return;
-                }
-                setShowElectricityModal(true);
-              }}
-              className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-xl p-8 hover:border-purple-500 transition-all group text-left"
-            >
-              <div className="text-6xl mb-4">⚡</div>
-              <h3 className="text-2xl font-bold mb-2">Electricity Bills</h3>
-              <p className="text-gray-400 mb-4">Pay your power bill instantly</p>
-              <p className="text-sm text-gray-500">Nigeria • Kenya • Ghana • South Africa</p>
-              <div className="mt-4 text-purple-400 font-semibold group-hover:translate-x-2 transition-transform">
-                Pay Now →
-              </div>
-            </button>
-
-            <div className="bg-white/5 border border-white/10 rounded-xl p-8 opacity-50">
-              <div className="text-6xl mb-4">💧</div>
-              <h3 className="text-2xl font-bold mb-2">Water Bills</h3>
-              <p className="text-gray-400 mb-4">Coming soon</p>
-            </div>
-
-            <div className="bg-white/5 border border-white/10 rounded-xl p-8 opacity-50">
-              <div className="text-6xl mb-4">📡</div>
-              <h3 className="text-2xl font-bold mb-2">Internet Bills</h3>
-              <p className="text-gray-400 mb-4">Coming soon</p>
-            </div>
-          </div>
-        )}
-
         {/* Products Grid */}
-        {activeTab !== 'utilities' && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-purple-500/50 transition-all"
-              >
-                <div className="h-32 bg-gradient-to-br from-purple-600/20 to-pink-600/20 flex items-center justify-center">
-                  <img
-                    src={product.image_url}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-bold mb-1 line-clamp-1">{product.name}</h3>
-                  <p className="text-sm text-gray-400 mb-3 line-clamp-1">{product.provider}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-green-400">${product.price_usd}</span>
-                    <button
-                      onClick={() => handleBuy(product)}
-                      className="px-4 py-2 bg-purple-600 rounded-lg hover:bg-purple-500 transition-all text-sm font-semibold"
-                    >
-                      Buy
-                    </button>
-                  </div>
-                </div>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '16px'
+        }}>
+          {PRODUCTS[tab].map(p => (
+            <div 
+              key={p.id}
+              style={{
+                background: 'rgba(255,255,255,0.1)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '12px',
+                padding: '16px'
+              }}
+            >
+              <div style={{
+                height: '100px',
+                background: 'linear-gradient(135deg, #9333ea, #ec4899)',
+                borderRadius: '8px',
+                marginBottom: '12px'
+              }}></div>
+              <h3 style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '8px' }}>
+                {p.name}
+              </h3>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <span style={{ 
+                  fontSize: '18px', 
+                  fontWeight: 'bold',
+                  color: '#4ade80'
+                }}>
+                  {typeof p.price === 'number' ? `$${p.price}` : p.price}
+                </span>
+                <button
+                  onClick={() => buy(p)}
+                  style={{
+                    padding: '8px 16px',
+                    background: '#9333ea',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Buy
+                </button>
               </div>
-            ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Product Modal */}
+        {modal && (
+          <div style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            zIndex: 50
+          }}>
+            <div style={{
+              background: '#1e293b',
+              borderRadius: '16px',
+              padding: '24px',
+              maxWidth: '400px',
+              width: '100%',
+              border: '1px solid rgba(168,85,247,0.3)'
+            }}>
+              {step === 'form' && (
+                <>
+                  <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                    {modal.name}
+                  </h2>
+                  <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#4ade80', marginBottom: '24px' }}>
+                    ${modal.price}
+                  </p>
+                  <button
+                    onClick={pay}
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
+                      border: 'none',
+                      borderRadius: '12px',
+                      color: 'white',
+                      fontSize: '18px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Pay Now
+                  </button>
+                </>
+              )}
+
+              {step === 'processing' && (
+                <div style={{ textAlign: 'center', padding: '32px' }}>
+                  <div style={{
+                    width: '64px',
+                    height: '64px',
+                    border: '4px solid #9333ea',
+                    borderTop: '4px solid transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto 16px'
+                  }}></div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 'bold' }}>Processing...</h3>
+                </div>
+              )}
+
+              {step === 'confirming' && (
+                <div style={{ textAlign: 'center', padding: '32px' }}>
+                  <div style={{
+                    width: '64px',
+                    height: '64px',
+                    border: '4px solid #eab308',
+                    borderTop: '4px solid transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto 16px'
+                  }}></div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 'bold' }}>Confirming...</h3>
+                </div>
+              )}
+
+              {step === 'success' && (
+                <div style={{ textAlign: 'center', padding: '32px' }}>
+                  <div style={{
+                    width: '64px',
+                    height: '64px',
+                    background: '#22c55e',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 16px',
+                    fontSize: '32px'
+                  }}>✓</div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#4ade80', marginBottom: '16px' }}>
+                    Success!
+                  </h3>
+                  <div style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    padding: '16px',
+                    borderRadius: '12px',
+                    marginBottom: '16px'
+                  }}>
+                    <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>Your Code:</p>
+                    <p style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: 'monospace' }}>
+                      XXXX-YYYY-ZZZZ
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setModal(null)}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      background: '#22c55e',
+                      border: 'none',
+                      borderRadius: '12px',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Done
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         )}
-      </section>
 
-      {/* Modals */}
-      <ElectricityModal
-        isOpen={showElectricityModal}
-        onClose={() => setShowElectricityModal(false)}
-        walletAddress={walletAddress}
-        chain={selectedChain}
-      />
+        {/* Bill Modal */}
+        {billModal && (
+          <div style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            zIndex: 50
+          }}>
+            <div style={{
+              background: '#1e293b',
+              borderRadius: '16px',
+              padding: '24px',
+              maxWidth: '400px',
+              width: '100%'
+            }}>
+              <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                💡 Pay Electricity Bill
+              </h2>
+              <p style={{ color: '#9ca3af', marginBottom: '24px' }}>
+                Coming soon! Nigeria, Kenya, Ghana, South Africa
+              </p>
+              <button
+                onClick={() => setBillModal(false)}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  background: '#9333ea',
+                  border: 'none',
+                  borderRadius: '12px',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
-      {selectedProduct && (
-        <ProductModal
-          isOpen={!!selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          product={selectedProduct}
-          walletAddress={walletAddress}
-          chain={selectedChain}
-        />
-      )}
-
-      {/* Footer */}
-      <footer className="border-t border-purple-500/20 mt-16">
-        <div className="container mx-auto px-4 py-8 text-center text-gray-400">
-          <p className="mb-2">🚀 Built with 💜 by Baint Team</p>
-          <p className="text-sm">Pay bills and buy services with crypto</p>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-// Wrap with Solana Wallet Provider
-function App() {
-  const endpoint = useMemo(() => clusterApiUrl('mainnet-beta'), []);
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
-
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          <AppContent />
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </>
   );
 }
 
