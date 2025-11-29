@@ -630,7 +630,7 @@ Status: ✅ ${tx.status}
                   cursor: 'pointer'
                 }}
               >
-                Pay {fees ? `${fees.total.toFixed(2)} ${fees.token}` : `$${modal.price}`}
+                {`Pay ${fees ? fees.total.toFixed(2) + ' ' + fees.token : '$' + modal.price}`}
               </button>
             </>
           )}
@@ -985,7 +985,7 @@ Status: ✅ ${tx.status}
                   opacity: (!formData.provider || (utilityModal.type === 'electricity' && (!formData.accountNumber || !formData.amount)) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber)) ? 0.5 : 1
                 }}
               >
-                Pay {fees && formData.amount > 0 ? `${fees.total.toFixed(2)} ${fees.token}` : `$${utilityModal.price}`}
+                {`Pay ${fees && formData.amount > 0 ? fees.total.toFixed(2) + ' ' + fees.token : '$' + utilityModal.price}`}
               </button>
             </>
           )}
