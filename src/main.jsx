@@ -617,21 +617,21 @@ Status: ✅ ${tx.status}
 
 )}
 <button
-                onClick={pay}
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-                  border: 'none',
-                  borderRadius: '12px',
-                  color: 'white',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer'
-                }}
-              >
-                {`Pay ${fees ? fees.total.toFixed(2) + ' ' + fees.token : '$' + modal.price}`}
-              </button>
+  onClick={pay}
+  style={{
+    width: '100%',
+    padding: '16px',
+    background: 'linear-gradient(135deg, #9333ea, #ec4899)',
+    border: 'none',
+    borderRadius: '12px',
+    color: 'white',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    cursor: 'pointer'
+  }}
+>
+  Pay {fees ? fees.total.toFixed(2) + ' ' + fees.token : '$' + modal.price}
+</button>
             </>
           )}
 
@@ -970,23 +970,23 @@ Status: ✅ ${tx.status}
               )}
 
               <button
-                onClick={pay}
-                disabled={!formData.provider || (utilityModal.type === 'electricity' && (!formData.accountNumber || !formData.amount)) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber)}
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-                  border: 'none',
-                  borderRadius: '12px',
-                  color: 'white',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  opacity: (!formData.provider || (utilityModal.type === 'electricity' && (!formData.accountNumber || !formData.amount)) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber)) ? 0.5 : 1
-                }}
-              >
-                {`Pay ${fees && formData.amount > 0 ? fees.total.toFixed(2) + ' ' + fees.token : '$' + utilityModal.price}`}
-              </button>
+  onClick={pay}
+  disabled={!formData.provider || (utilityModal.type === 'electricity' && (!formData.accountNumber || !formData.amount)) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber)}
+  style={{
+    width: '100%',
+    padding: '16px',
+    background: 'linear-gradient(135deg, #9333ea, #ec4899)',
+    border: 'none',
+    borderRadius: '12px',
+    color: 'white',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    opacity: (!formData.provider || (utilityModal.type === 'electricity' && (!formData.accountNumber || !formData.amount)) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber)) ? 0.5 : 1
+  }}
+>
+  Pay {fees && formData.amount > 0 ? fees.total.toFixed(2) + ' ' + fees.token : '$' + utilityModal.price}
+</button>
             </>
           )}
 
