@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
-// Styles
 const styles = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { 
@@ -15,7 +14,6 @@ const styles = `
   }
 `;
 
-// Product Categories with USDT/USDC pricing
 const PRODUCTS = {
   utilities: [
     { id: 'elec1', name: '⚡ Electricity Bill', type: 'electricity', price: 'Variable', description: 'Pay your power bill instantly' },
@@ -113,7 +111,6 @@ const MOBILE_PROVIDERS = {
   southafrica: ['Vodacom', 'MTN', 'Cell C', 'Telkom'],
 };
 
-// Fee Calculator
 const calculateFees = (amount, tokenId = 'usdt') => {
   const token = PAYMENT_TOKENS.find(t => t.id === tokenId) || PAYMENT_TOKENS[0];
   const platformFee = amount * (token.fee / 100);
@@ -130,7 +127,6 @@ const calculateFees = (amount, tokenId = 'usdt') => {
   };
 };
 
-// Transaction Storage
 const saveTransaction = (tx) => {
   const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
   transactions.unshift(tx);
@@ -141,7 +137,6 @@ const getTransactions = () => {
   return JSON.parse(localStorage.getItem('transactions') || '[]');
 };
 
-// Main App
 function App() {
   const [wallet, setWallet] = useState(null);
   const [tab, setTab] = useState('utilities');
@@ -150,7 +145,6 @@ function App() {
   const [step, setStep] = useState('form');
   const [selectedToken, setSelectedToken] = useState('usdt');
   const [showHistory, setShowHistory] = useState(false);
-  const [showReceipt, setShowReceipt] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [formData, setFormData] = useState({
     country: 'nigeria',
@@ -297,7 +291,6 @@ Status: ✅ ${tx.status}
       <style>{styles}</style>
       
       <div style={{ minHeight: '100vh', padding: '16px', paddingBottom: '80px' }}>
-        {/* Header */}
         <div style={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
@@ -358,13 +351,12 @@ Status: ✅ ${tx.status}
           </div>
         </div>
 
-        {/* Hero */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '16px' }}>
             Pay Bills. Anywhere. Instantly.
           </h2>
           <p style={{ color: '#d1d5db', fontSize: '16px', marginBottom: '8px' }}>
-            Electricity, data, streaming, shopping & more with crypto
+            Electricity, data, streaming, shopping and more with crypto
           </p>
           <div style={{ 
             display: 'inline-flex', 
@@ -378,7 +370,6 @@ Status: ✅ ${tx.status}
           </div>
         </div>
 
-        {/* Tabs */}
         <div style={{ 
           display: 'flex', 
           gap: '8px', 
@@ -408,7 +399,6 @@ Status: ✅ ${tx.status}
           ))}
         </div>
 
-        {/* Products Grid */}
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(2, 1fr)',
@@ -467,7 +457,7 @@ Status: ✅ ${tx.status}
                 {p.name.split(' ')[0]}
               </div>
               <h3 style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '4px' }}>
-                {p.name.substring(2)}
+                {p.name.replace(/^[^\s]+\s/, '')}
               </h3>
               <p style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '8px' }}>
                 {p.description}
@@ -482,7 +472,7 @@ Status: ✅ ${tx.status}
                   fontWeight: 'bold',
                   color: '#4ade80'
                 }}>
-                  {typeof p.price === 'number' ? `$${p.price.toFixed(2)}` : p.price}
+                  {typeof p.price === 'number' ? '$' + p.price.toFixed(2) : p.price}
                 </span>
                 <button
                   onClick={() => buy(p)}
@@ -504,7 +494,7 @@ Status: ✅ ${tx.status}
           ))}
         </div>
 
-        {/* Regular Product Modal */}
+        {/* Regular Products Modal */}
         {modal && (
           <div style={{
             position: 'fixed',
@@ -534,7 +524,6 @@ Status: ✅ ${tx.status}
                   </div>
                   <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '16px' }}>{modal.description}</p>
 
-                  {/* Payment Token Selection */}
                   <div style={{ marginBottom: '16px' }}>
                     <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Pay with</label>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
@@ -545,7 +534,7 @@ Status: ✅ ${tx.status}
                           style={{
                             padding: '12px',
                             background: selectedToken === token.id ? 'rgba(168,85,247,0.2)' : 'rgba(255,255,255,0.05)',
-                            border: `1px solid ${selectedToken === token.id ? 'rgba(168,85,247,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                            border: selectedToken === token.id ? '1px solid rgba(168,85,247,0.5)' : '1px solid rgba(255,255,255,0.1)',
                             borderRadius: '8px',
                             color: 'white',
                             cursor: 'pointer',
@@ -574,7 +563,6 @@ Status: ✅ ${tx.status}
                     </div>
                   </div>
 
-                  {/* Fee Breakdown */}
                   {fees && (
                     <div style={{
                       background: 'rgba(255,255,255,0.05)',
@@ -589,7 +577,7 @@ Status: ✅ ${tx.status}
                         <span>${fees.amount.toFixed(2)}</span>
                       </div>
                       <div style={{ fontSize: '13px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: '#9ca3af' }}>Platform Fee ({PAYMENT_TOKENS.find(t => t.id === selectedToken)?.fee}%):</span>
+                        <span style={{ color: '#9ca3af' }}>Platform Fee ({PAYMENT_TOKENS.find(t => t.id === selectedToken).fee}%):</span>
                         <span>${fees.platformFee.toFixed(2)}</span>
                       </div>
                       <div style={{ fontSize: '13px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
@@ -612,620 +600,551 @@ Status: ✅ ${tx.status}
                           color: '#4ade80'
                         }}>
                           💰 You save ${fees.savings.toFixed(2)} with stablecoins!
-
-)}
-
-)}
-<button
-  onClick={pay}
-  style={{
-    width: '100%',
-    padding: '16px',
-    background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-    border: 'none',
-    borderRadius: '12px',
-    color: 'white',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    cursor: 'pointer'
-  }}
->
-  Pay {fees ? fees.total.toFixed(2) + ' ' + fees.token : '$' + modal.price}
-</button>
-            </>
-          )}
-
-          {step === 'processing' && (
-            <div style={{ textAlign: 'center', padding: '32px' }}>
-              <div style={{
-                width: '64px',
-                height: '64px',
-                border: '4px solid #9333ea',
-                borderTop: '4px solid transparent',
-                borderRadius: '50%',
-                animation: 'spin 1s linear infinite',
-                margin: '0 auto 16px'
-              }}></div>
-              <h3 style={{ fontSize: '20px', fontWeight: 'bold' }}>Processing...</h3>
-              <p style={{ color: '#9ca3af', marginTop: '8px' }}>Creating your order</p>
-            </div>
-          )}
-
-          {step === 'confirming' && (
-            <div style={{ textAlign: 'center', padding: '32px' }}>
-              <div style={{
-                width: '64px',
-                height: '64px',
-                border: '4px solid #eab308',
-                borderTop: '4px solid transparent',
-                borderRadius: '50%',
-                animation: 'spin 1s linear infinite',
-                margin: '0 auto 16px'
-              }}></div>
-              <h3 style={{ fontSize: '20px', fontWeight: 'bold' }}>Confirming...</h3>
-              <p style={{ color: '#9ca3af', marginTop: '8px' }}>Waiting for blockchain</p>
-            </div>
-          )}
-
-          {step === 'success' && (
-            <div style={{ textAlign: 'center', padding: '32px' }}>
-              <div style={{
-                width: '64px',
-                height: '64px',
-                background: '#22c55e',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 16px',
-                fontSize: '32px'
-              }}>✓</div>
-              <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#4ade80', marginBottom: '16px' }}>
-                Payment Successful!
-              </h3>
-              <div style={{
-                background: 'rgba(255,255,255,0.05)',
-                padding: '16px',
-                borderRadius: '12px',
-                marginBottom: '16px'
-              }}>
-                <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>Your Code:</p>
-                <p style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: 'monospace' }}>
-                  {modal.name.slice(0, 4).toUpperCase()}-{Math.random().toString(36).substr(2, 4).toUpperCase()}-{Math.random().toString(36).substr(2, 4).toUpperCase()}
-                </p>
-                <p style={{ fontSize: '11px', color: '#6b7280', marginTop: '8px' }}>
-                  Transaction ID: BNT-{Date.now().toString().slice(-8)}
-                </p>
-              </div>
-              <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '16px' }}>
-                Redeem at {modal.name.split(' ')[0].toLowerCase()}.com
-              </p>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={() => downloadReceipt(transactions[0])}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    background: 'rgba(168,85,247,0.2)',
-                    border: '1px solid rgba(168,85,247,0.3)',
-                    borderRadius: '12px',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    cursor: 'pointer'
-                  }}
-                >
-                  📄 Receipt
-                </button>
-                <button
-                  onClick={closeModal}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    background: '#22c55e',
-                    border: 'none',
-                    borderRadius: '12px',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Done
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    )}
-
-    {/* Utility Modal */}
-    {utilityModal && (
-      <div style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(0,0,0,0.8)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '16px',
-        zIndex: 50,
-        overflowY: 'auto'
-      }}>
-        <div style={{
-          background: '#1e293b',
-          borderRadius: '16px',
-          padding: '24px',
-          maxWidth: '400px',
-          width: '100%',
-          maxHeight: '90vh',
-          overflowY: 'auto'
-        }}>
-          {step === 'form' && (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>{utilityModal.name}</h2>
-                <button onClick={closeModal} style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: '24px', cursor: 'pointer' }}>×</button>
-              </div>
-
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Country</label>
-                <select
-                  value={formData.country}
-                  onChange={(e) => setFormData({ ...formData, country: e.target.value, provider: '' })}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '8px',
-                    color: 'white',
-                    fontSize: '14px'
-                  }}
-                >
-                  {Object.entries(COUNTRIES).map(([key, c]) => (
-                    <option key={key} value={key} style={{ background: '#1e293b' }}>
-                      {c.flag} {c.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {utilityModal.type === 'electricity' && (
-                <>
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Electricity Provider</label>
-                    <select
-                      value={formData.provider}
-                      onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '8px',
-                        color: 'white',
-                        fontSize: '14px'
-                      }}
-                    >
-                      <option value="" style={{ background: '#1e293b' }}>Select provider...</option>
-                      {ELECTRICITY_PROVIDERS[formData.country]?.map(p => (
-                        <option key={p.id} value={p.id} style={{ background: '#1e293b' }}>{p.name}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Meter Number</label>
-                    <input
-                      type="text"
-                      value={formData.accountNumber}
-                      onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
-                      placeholder="Enter meter number"
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '8px',
-                        color: 'white',
-                        fontSize: '14px'
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Amount (USD)</label>
-                    <input
-                      type="number"
-                      value={formData.amount}
-                      onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                      placeholder="Enter amount"
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '8px',
-                        color: 'white',
-                        fontSize: '14px'
-                      }}
-                    />
-                  </div>
-                </>
-              )}
-
-              {(utilityModal.type === 'data' || utilityModal.type === 'airtime') && (
-                <>
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Mobile Provider</label>
-                    <select
-                      value={formData.provider}
-                      onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '8px',
-                        color: 'white',
-                        fontSize: '14px'
-                      }}
-                    >
-                      <option value="" style={{ background: '#1e293b' }}>Select provider...</option>
-                      {MOBILE_PROVIDERS[formData.country]?.map(p => (
-                        <option key={p} value={p} style={{ background: '#1e293b' }}>{p}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Phone Number</label>
-                    <input
-                      type="tel"
-                      value={formData.phoneNumber}
-                      onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                      placeholder="Enter phone number"
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '8px',
-                        color: 'white',
-                        fontSize: '14px'
-                      }}
-                    />
-                  </div>
-                </>
-              )}
-
-              {/* Payment Token Selection */}
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Pay with</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
-                  {PAYMENT_TOKENS.map(token => (
-                    <button
-                      key={token.id}
-                      onClick={() => setSelectedToken(token.id)}
-                      style={{
-                        padding: '12px',
-                        background: selectedToken === token.id ? 'rgba(168,85,247,0.2)' : 'rgba(255,255,255,0.05)',
-                        border: `1px solid ${selectedToken === token.id ? 'rgba(168,85,247,0.5)' : 'rgba(255,255,255,0.1)'}`,
-                        borderRadius: '8px',
-                        color: 'white',
-                        cursor: 'pointer',
-                        position: 'relative'
-                      }}
-                    >
-                      {token.recommended && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '4px',
-                          right: '4px',
-                          background: '#22c55e',
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                          fontSize: '9px',
-                          fontWeight: 'bold'
-                        }}>
-                          BEST
                         </div>
                       )}
-                      <div style={{ fontSize: '20px', marginBottom: '4px' }}>{token.icon}</div>
-                      <div style={{ fontSize: '12px', fontWeight: 'bold' }}>{token.name}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Fee Breakdown */}
-              {fees && formData.amount > 0 && (
-                <div style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  padding: '16px',
-                  borderRadius: '12px',
-                  marginBottom: '16px',
-                  border: '1px solid rgba(255,255,255,0.1)'
-                }}>
-                  <h3 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '12px' }}>Payment Breakdown</h3>
-                  <div style={{ fontSize: '13px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#9ca3af' }}>Amount:</span>
-                    <span>${fees.amount.toFixed(2)}</span>
-                  </div>
-                  <div style={{ fontSize: '13px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#9ca3af' }}>Fee ({PAYMENT_TOKENS.find(t => t.id === selectedToken)?.fee}%):</span>
-                    <span>${fees.platformFee.toFixed(2)}</span>
-                  </div>
-                  <div style={{ fontSize: '13px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#9ca3af' }}>Gas:</span>
-                    <span>${fees.gasFee.toFixed(2)}</span>
-                  </div>
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px' }}>
-                    <div style={{ fontSize: '16px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
-                      <span>Total:</span>
-                      <span style={{ color: '#4ade80' }}>{fees.total.toFixed(2)} {fees.token}</span>
                     </div>
-                  </div>
+                  )}
+
+                  <button
+                    onClick={pay}
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: '16px',cursor: 'pointer'
+                    }}
+                  >
+                    Pay Now
+                  </button>
+                </>
+              )}
+
+              {step === 'processing' && (
+                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    border: '4px solid rgba(168,85,247,0.2)',
+                    borderTop: '4px solid #9333ea',
+                    borderRadius: '50%',
+                    margin: '0 auto 24px',
+                    animation: 'spin 1s linear infinite'
+                  }}></div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>Processing Payment</h3>
+                  <p style={{ color: '#9ca3af', fontSize: '14px' }}>Preparing transaction...</p>
                 </div>
               )}
 
-              <button
-  onClick={pay}
-  disabled={!formData.provider || (utilityModal.type === 'electricity' && (!formData.accountNumber || !formData.amount)) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber)}
-  style={{
-    width: '100%',
-    padding: '16px',
-    background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-    border: 'none',
-    borderRadius: '12px',
-    color: 'white',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    opacity: (!formData.provider || (utilityModal.type === 'electricity' && (!formData.accountNumber || !formData.amount)) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber)) ? 0.5 : 1
-  }}
->
-  Pay {fees && formData.amount > 0 ? fees.total.toFixed(2) + ' ' + fees.token : '$' + utilityModal.price}
-</button>
-            </>
-          )}
+              {step === 'confirming' && (
+                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    border: '4px solid rgba(168,85,247,0.2)',
+                    borderTop: '4px solid #9333ea',
+                    borderRadius: '50%',
+                    margin: '0 auto 24px',
+                    animation: 'spin 1s linear infinite'
+                  }}></div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>Confirming on Chain</h3>
+                  <p style={{ color: '#9ca3af', fontSize: '14px' }}>Waiting for blockchain confirmation...</p>
+                </div>
+              )}
 
-          {step === 'processing' && (
-            <div style={{ textAlign: 'center', padding: '32px' }}>
-              <div style={{
-                width: '64px',
-                height: '64px',
-                border: '4px solid #9333ea',
-                borderTop: '4px solid transparent',
-                borderRadius: '50%',
-                animation: 'spin 1s linear infinite',
-                margin: '0 auto 16px'
-              }}></div>
-              <h3 style={{ fontSize: '20px', fontWeight: 'bold' }}>Processing...</h3>
+              {step === 'success' && (
+                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                  <div style={{ fontSize: '64px', marginBottom: '16px' }}>✅</div>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#22c55e' }}>Payment Successful!</h3>
+                  <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '24px' }}>
+                    Your {modal.name} has been activated
+                  </p>
+                  <button
+                    onClick={closeModal}
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Done
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-
-          {step === 'confirming' && (
-            <div style={{ textAlign: 'center', padding: '32px' }}>
-              <div style={{
-                width: '64px',
-                height: '64px',
-                border: '4px solid #eab308',
-                borderTop: '4px solid transparent',
-                borderRadius: '50%',
-                animation: 'spin 1s linear infinite',
-                margin: '0 auto 16px'
-              }}></div>
-              <h3 style={{ fontSize: '20px', fontWeight: 'bold' }}>Confirming...</h3>
-              <p style={{ color: '#9ca3af', marginTop: '8px' }}>
-                {utilityModal.type === 'electricity' ? 'Crediting your meter' : 
-                 utilityModal.type === 'data' ? 'Activating data bundle' : 
-                 'Processing top-up'}
-              </p>
-            </div>
-          )}
-
-          {step === 'success' && (
-            <div style={{ textAlign: 'center', padding: '32px' }}>
-              <div style={{
-                width: '64px',
-                height: '64px',
-                background: '#22c55e',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 16px',
-                fontSize: '32px'
-              }}>✓</div>
-              <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#4ade80', marginBottom: '16px' }}>
-                Payment Successful!
-              </h3>
-              <div style={{
-                background: 'rgba(255,255,255,0.05)',
-                padding: '16px',
-                borderRadius: '12px',
-                marginBottom: '16px'
-              }}>
-                {utilityModal.type === 'electricity' && (
-                  <>
-                    <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>
-                      ${formData.amount} credited to:
-                    </p>
-                    <p style={{ fontSize: '18px', fontWeight: 'bold', fontFamily: 'monospace' }}>
-                      {formData.accountNumber}
-                    </p>
-                  </>
-                )}
-                {(utilityModal.type === 'data' || utilityModal.type === 'airtime') && (
-                  <>
-                    <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>
-                      {utilityModal.type === 'data' ? 'Data activated on:' : 'Airtime credited to:'}
-                    </p>
-                    <p style={{ fontSize: '18px', fontWeight: 'bold', fontFamily: 'monospace' }}>
-                      {formData.phoneNumber}
-                    </p>
-                    <p style={{ fontSize: '14px', color: '#4ade80', marginTop: '8px' }}>
-                      {utilityModal.name.substring(2)}
-                    </p>
-                  </>
-                )}
-                <p style={{ fontSize: '11px', color: '#6b7280', marginTop: '8px' }}>
-                  Transaction ID: BNT-{Date.now().toString().slice(-8)}
-                </p>
-              </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={() => downloadReceipt(transactions[0])}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    background: 'rgba(168,85,247,0.2)',
-                    border: '1px solid rgba(168,85,247,0.3)',
-                    borderRadius: '12px',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    cursor: 'pointer'
-                  }}
-                >
-                  📄 Receipt
-                </button>
-                <button
-                  onClick={closeModal}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    background: '#22c55e',
-                    border: 'none',
-                    borderRadius: '12px',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Done
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    )}
-
-    {/* Transaction History Modal */}
-    {showHistory && (
-      <div style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(0,0,0,0.8)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '16px',
-        zIndex: 50
-      }}>
-        <div style={{
-          background: '#1e293b',
-          borderRadius: '16px',
-          padding: '24px',
-          maxWidth: '500px',
-          width: '100%',
-          maxHeight: '90vh',
-          overflowY: 'auto'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>Transaction History</h2>
-            <button onClick={() => setShowHistory(false)} style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: '24px', cursor: 'pointer' }}>×</button>
           </div>
+        )}
 
-          {transactions.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '32px', color: '#9ca3af' }}>
-              <p>No transactions yet</p>
-              <p style={{ fontSize: '14px', marginTop: '8px' }}>Your payment history will appear here</p>
+        {/* Utility Bills Modal (Electricity, Data, Airtime) */}
+        {utilityModal && (
+          <div style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            zIndex: 50
+          }}>
+            <div style={{
+              background: '#1e293b',
+              borderRadius: '16px',
+              padding: '24px',
+              maxWidth: '400px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              border: '1px solid rgba(168,85,247,0.3)'
+            }}>
+              {step === 'form' && (
+                <>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>{utilityModal.name}</h2>
+                    <button onClick={closeModal} style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: '24px', cursor: 'pointer' }}>×</button>
+                  </div>
+                  <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '16px' }}>{utilityModal.description}</p>
+
+                  {/* Country Selection */}
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Select Country</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                      {Object.entries(COUNTRIES).map(([key, country]) => (
+                        <button
+                          key={key}
+                          onClick={() => setFormData({...formData, country: key, provider: ''})}
+                          style={{
+                            padding: '12px',
+                            background: formData.country === key ? 'rgba(168,85,247,0.2)' : 'rgba(255,255,255,0.05)',
+                            border: formData.country === key ? '1px solid rgba(168,85,247,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '8px',
+                            color: 'white',
+                            cursor: 'pointer',
+                            fontSize: '12px'
+                          }}
+                        >
+                          <div style={{ fontSize: '24px', marginBottom: '4px' }}>{country.flag}</div>
+                          <div style={{ fontWeight: 'bold' }}>{country.name}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Provider Selection */}
+                  {utilityModal.type === 'electricity' && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Select Provider</label>
+                      <select
+                        value={formData.provider}
+                        onChange={(e) => setFormData({...formData, provider: e.target.value})}
+                        style={{
+                          width: '100%',
+                          padding: '12px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          color: 'white',
+                          fontSize: '14px'
+                        }}
+                      >
+                        <option value="">Choose provider</option>
+                        {ELECTRICITY_PROVIDERS[formData.country].map(provider => (
+                          <option key={provider.id} value={provider.id}>{provider.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {(utilityModal.type === 'data' || utilityModal.type === 'airtime') && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Select Network</label>
+                      <select
+                        value={formData.provider}
+                        onChange={(e) => setFormData({...formData, provider: e.target.value})}
+                        style={{
+                          width: '100%',
+                          padding: '12px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          color: 'white',
+                          fontSize: '14px'
+                        }}
+                      >
+                        <option value="">Choose network</option>
+                        {MOBILE_PROVIDERS[formData.country].map(provider => (
+                          <option key={provider} value={provider}>{provider}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Account Number / Phone Number */}
+                  {utilityModal.type === 'electricity' && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Meter Number</label>
+                      <input
+                        type="text"
+                        value={formData.accountNumber}
+                        onChange={(e) => setFormData({...formData, accountNumber: e.target.value})}
+                        placeholder="Enter meter number"
+                        style={{
+                          width: '100%',
+                          padding: '12px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          color: 'white',
+                          fontSize: '14px'
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {(utilityModal.type === 'data' || utilityModal.type === 'airtime') && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Phone Number</label>
+                      <input
+                        type="tel"
+                        value={formData.phoneNumber}
+                        onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
+                        placeholder="Enter phone number"
+                        style={{
+                          width: '100%',
+                          padding: '12px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          color: 'white',
+                          fontSize: '14px'
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {/* Amount Input (for variable price items) */}
+                  {utilityModal.price === 'Variable' && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Amount ($)</label>
+                      <input
+                        type="number"
+                        value={formData.amount}
+                        onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                        placeholder="Enter amount"
+                        min="1"
+                        style={{
+                          width: '100%',
+                          padding: '12px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          color: 'white',
+                          fontSize: '14px'
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {/* Payment Token Selection */}
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Pay with</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                      {PAYMENT_TOKENS.map(token => (
+                        <button
+                          key={token.id}
+                          onClick={() => setSelectedToken(token.id)}
+                          style={{
+                            padding: '12px',
+                            background: selectedToken === token.id ? 'rgba(168,85,247,0.2)' : 'rgba(255,255,255,0.05)',
+                            border: selectedToken === token.id ? '1px solid rgba(168,85,247,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '8px',
+                            color: 'white',
+                            cursor: 'pointer',
+                            position: 'relative'
+                          }}
+                        >
+                          {token.recommended && (
+                            <div style={{
+                              position: 'absolute',
+                              top: '4px',
+                              right: '4px',
+                              background: '#22c55e',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontSize: '9px',
+                              fontWeight: 'bold'
+                            }}>
+                              BEST
+                            </div>
+                          )}
+                          <div style={{ fontSize: '24px', marginBottom: '4px' }}>{token.icon}</div>
+                          <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{token.name}</div>
+                          <div style={{ fontSize: '11px', color: '#9ca3af' }}>{token.fee}% fee</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Payment Breakdown */}
+                  {fees && (
+                    <div style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      padding: '16px',
+                      borderRadius: '12px',
+                      marginBottom: '16px',
+                      border: '1px solid rgba(255,255,255,0.1)'
+                    }}>
+                      <h3 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '12px' }}>Payment Breakdown</h3>
+                      <div style={{ fontSize: '13px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#9ca3af' }}>Bill Amount:</span>
+                        <span>${fees.amount.toFixed(2)}</span>
+                      </div>
+                      <div style={{ fontSize: '13px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#9ca3af' }}>Platform Fee ({PAYMENT_TOKENS.find(t => t.id === selectedToken).fee}%):</span>
+                        <span>${fees.platformFee.toFixed(2)}</span>
+                      </div>
+                      <div style={{ fontSize: '13px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#9ca3af' }}>Gas Fee (est.):</span>
+                        <span>${fees.gasFee.toFixed(2)}</span>
+                      </div>
+                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px' }}>
+                        <div style={{ fontSize: '16px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Total:</span>
+                          <span style={{ color: '#4ade80' }}>{fees.total.toFixed(2)} {fees.token}</span>
+                        </div>
+                      </div>
+                      {fees.savings > 0 && (
+                        <div style={{ 
+                          marginTop: '8px', 
+                          padding: '8px', 
+                          background: 'rgba(34,197,94,0.1)', 
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          color: '#4ade80'
+                        }}>
+                          💰 You save ${fees.savings.toFixed(2)} with stablecoins!
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <button
+                    onClick={pay}
+                    disabled={!formData.provider || (utilityModal.type === 'electricity' && !formData.accountNumber) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber) || (utilityModal.price === 'Variable' && !formData.amount)}
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      background: (!formData.provider || (utilityModal.type === 'electricity' && !formData.accountNumber) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber) || (utilityModal.price === 'Variable' && !formData.amount)) ? '#6b7280' : 'linear-gradient(135deg, #9333ea, #ec4899)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                      cursor: (!formData.provider || (utilityModal.type === 'electricity' && !formData.accountNumber) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber) || (utilityModal.price === 'Variable' && !formData.amount)) ? 'not-allowed' : 'pointer',
+                      opacity: (!formData.provider || (utilityModal.type === 'electricity' && !formData.accountNumber) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber) || (utilityModal.price === 'Variable' && !formData.amount)) ? 0.5 : 1
+                    }}
+                  >
+                    Pay Now
+                  </button>
+                </>
+              )}
+
+              {step === 'processing' && (
+                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    border: '4px solid rgba(168,85,247,0.2)',
+                    borderTop: '4px solid #9333ea',
+                    borderRadius: '50%',
+                    margin: '0 auto 24px',
+                    animation: 'spin 1s linear infinite'
+                  }}></div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>Processing Payment</h3>
+                  <p style={{ color: '#9ca3af', fontSize: '14px' }}>Preparing transaction...</p>
+                </div>
+              )}
+
+              {step === 'confirming' && (
+                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    border: '4px solid rgba(168,85,247,0.2)',
+                    borderTop: '4px solid #9333ea',
+                    borderRadius: '50%',
+                    margin: '0 auto 24px',
+                    animation: 'spin 1s linear infinite'
+                  }}></div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>Confirming on Chain</h3>
+                  <p style={{ color: '#9ca3af', fontSize: '14px' }}>Waiting for blockchain confirmation...</p>
+                </div>
+              )}
+
+              {step === 'success' && (
+                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                  <div style={{ fontSize: '64px', marginBottom: '16px' }}>✅</div>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#22c55e' }}>Payment Successful!</h3>
+                  <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '24px' }}>
+                    Your {utilityModal.name} payment has been processed
+                  </p>
+                  <button
+                    onClick={closeModal}
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Done
+                  </button>
+                </div>
+              )}
             </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {transactions.map((tx, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    padding: '16px',
-                    borderRadius: '12px',
-                    border: '1px solid rgba(255,255,255,0.1)'
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <span style={{ fontWeight: 'bold' }}>{tx.product}</span>
-                    <span style={{ color: '#4ade80' }}>✓ {tx.status}</span>
-                  </div>
-                  <div style={{ fontSize: '13px', color: '#9ca3af', marginBottom: '4px' }}>
-                    {new Date(tx.date).toLocaleString()}
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-                    <span>${tx.total.toFixed(2)} {tx.token}</span>
-                    <button
-                      onClick={() => downloadReceipt(tx)}
+          </div>
+        )}
+
+        {/* Transaction History Modal */}
+        {showHistory && (
+          <div style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            zIndex: 50
+          }}>
+            <div style={{
+              background: '#1e293b',
+              borderRadius: '16px',
+              padding: '24px',
+              maxWidth: '500px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              border: '1px solid rgba(168,85,247,0.3)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>Transaction History</h2>
+                <button 
+                  onClick={() => setShowHistory(false)} 
+                  style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: '24px', cursor: 'pointer' }}
+                >×</button>
+              </div>
+
+              {transactions.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '40px 20px', color: '#9ca3af' }}>
+                  <div style={{ fontSize: '48px', marginBottom: '16px' }}>📋</div>
+                  <p>No transactions yet</p>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {transactions.map(tx => (
+                    <div 
+                      key={tx.id}
                       style={{
-                        padding: '4px 12px',
-                        background: 'rgba(168,85,247,0.2)',
-                        border: '1px solid rgba(168,85,247,0.3)',
-                        borderRadius: '6px',
-                        color: 'white',
-                        fontSize: '12px',
-                        cursor: 'pointer'
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '12px',
+                        padding: '16px'
                       }}
                     >
-                      📄 Receipt
-                    </button>
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#6b7280', marginTop: '8px', fontFamily: 'monospace' }}>
-                    {tx.id}
-                  </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '8px' }}>
+                        <div>
+                          <h3 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '4px' }}>{tx.product}</h3>
+                          <p style={{ fontSize: '12px', color: '#9ca3af' }}>{new Date(tx.date).toLocaleDateString()}</p>
+                        </div>
+                        <div style={{
+                          padding: '4px 8px',
+                          background: 'rgba(34,197,94,0.2)',
+                          border: '1px solid rgba(34,197,94,0.3)',
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                          color: '#4ade80'
+                        }}>
+                          {tx.status}
+                        </div>
+                      </div>
+                      
+                      {tx.details.meter && (
+                        <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>
+                          Meter: {tx.details.meter}
+                        </p>
+                      )}
+                      {tx.details.phone && (
+                        <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>
+                          Phone: {tx.details.phone}
+                        </p>
+                      )}
+                      {tx.details.provider && (
+                        <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>
+                          Provider: {tx.details.provider}
+                        </p>
+                      )}
+                      
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '13px', color: '#9ca3af' }}>Amount:</span>
+                        <span style={{ fontSize: '13px' }}>${tx.amount.toFixed(2)}</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '13px', color: '#9ca3af' }}>Total Paid:</span>
+                        <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#4ade80' }}>
+                          {tx.total.toFixed(2)} {tx.token}
+                        </span>
+                      </div>
+                      
+                      <div style={{ 
+                        fontSize: '11px', 
+                        color: '#9ca3af',
+                        marginBottom: '8px',
+                        wordBreak: 'break-all'
+                      }}>
+                        {tx.chain} • {tx.txHash.slice(0, 10)}...{tx.txHash.slice(-8)}
+                      </div>
+                      
+                      <button
+                        onClick={() => downloadReceipt(tx)}
+                        style={{
+                          width: '100%',
+                          padding: '8px',
+                          background: 'rgba(168,85,247,0.2)',
+                          border: '1px solid rgba(168,85,247,0.3)',
+                          borderRadius: '6px',
+                          color: 'white',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        📥 Download Receipt
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-
-          {transactions.length > 0 && (
-            <div style={{
-              marginTop: '16px',
-              padding: '16px',
-              background: 'rgba(168,85,247,0.1)',
-              borderRadius: '12px',
-              border: '1px solid rgba(168,85,247,0.2)'
-            }}>
-              <div style={{ fontSize: '14px', marginBottom: '8px' }}>
-                <strong>Total Spent:</strong> ${transactions.reduce((sum, tx) => sum + tx.total, 0).toFixed(2)}
-              </div>
-              <div style={{ fontSize: '14px', color: '#4ade80' }}>
-                <strong>Total Saved:</strong> ${transactions.reduce((sum, tx) => sum + (tx.token === 'USDT' || tx.token === 'USDC' ? 0.50 : 0), 0).toFixed(2)}
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    )}
-
-    {/* Footer */}
-    <div style={{ 
-      textAlign: 'center', 
-      marginTop: '48px', 
-      paddingTop: '24px', 
-      borderTop: '1px solid rgba(255,255,255,0.1)',
-      color: '#9ca3af',
-      fontSize: '14px'
-    }}>
-      <p style={{ marginBottom: '8px' }}>🚀 Built with 💜 by Baint Team</p>
-      <p style={{ fontSize: '12px' }}>Pay bills instantly with USDT/USDC • Multi-chain payments</p>
-      <div style={{ marginTop: '16px', display: 'flex', gap: '16px', justifyContent: 'center', fontSize: '12px' }}>
-        <a href="#" style={{ color: '#9ca3af', textDecoration: 'none' }}>Twitter</a>
-        <a href="#" style={{ color: '#9ca3af', textDecoration: 'none' }}>Discord</a>
-        <a href="#" style={{ color: '#9ca3af', textDecoration: 'none' }}>Support</a>
-      </div>
-    </div>
-  </div>
-</>
-);
+    </>
+  );
 }
-ReactDOM.createRoot(document.getElementById('root')).render();
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
