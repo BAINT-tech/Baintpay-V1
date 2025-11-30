@@ -14,66 +14,62 @@ const styles = `
   }
 `;
 
+
 const PRODUCTS = {
   utilities: [
-    { id: 'elec1', name: '⚡ Electricity Bill', type: 'electricity', price: 'Variable', description: 'Pay your power bill instantly' },
-    { id: 'water1', name: '💧 Water Bill', type: 'water', price: 'Variable', description: 'Pay water bills', comingSoon: true },
-    { id: 'internet1', name: '📡 Internet/WiFi Bill', type: 'internet', price: 'Variable', description: 'Pay internet providers', comingSoon: true },
+    { id: 'elec1', name: '⚡ Electricity Bill', type: 'electricity', suggestedPrice: 50, description: 'Pay your power bill instantly' },
+    { id: 'water1', name: '💧 Water Bill', type: 'water', suggestedPrice: 30, description: 'Pay water bills', comingSoon: true },
+    { id: 'internet1', name: '📡 Internet/WiFi Bill', type: 'internet', suggestedPrice: 40, description: 'Pay internet providers', comingSoon: true },
   ],
   mobile: [
-    { id: 'data1', name: '📱 Mobile Data 1GB', type: 'data', price: 5.00, description: '1GB data bundle' },
-    { id: 'data2', name: '📱 Mobile Data 5GB', type: 'data', price: 15.00, description: '5GB data bundle' },
-    { id: 'data3', name: '📱 Mobile Data 10GB', type: 'data', price: 25.00, description: '10GB data bundle' },
-    { id: 'airtime1', name: '📞 Airtime $10', type: 'airtime', price: 10.00, description: 'Mobile airtime top-up' },
-    { id: 'airtime2', name: '📞 Airtime $20', type: 'airtime', price: 20.00, description: 'Mobile airtime top-up' },
-    { id: 'airtime3', name: '📞 Airtime $50', type: 'airtime', price: 50.00, description: 'Mobile airtime top-up' },
+    { id: 'data1', name: '📱 Mobile Data', type: 'data', suggestedPrice: 10, description: 'Buy data bundle - any amount' },
+    { id: 'airtime1', name: '📞 Airtime Top-up', type: 'airtime', suggestedPrice: 20, description: 'Mobile airtime - any amount' },
   ],
   entertainment: [
-    { id: '1', name: 'Netflix Premium', price: 15.99, description: 'HD streaming for 1 month' },
-    { id: '2', name: 'Spotify Premium', price: 10.99, description: 'Ad-free music streaming' },
-    { id: '3', name: 'YouTube Premium', price: 11.99, description: 'Ad-free YouTube + Music' },
-    { id: '4', name: 'Disney+', price: 7.99, description: 'Disney, Marvel, Star Wars' },
-    { id: '5', name: 'Apple Music', price: 10.99, description: 'Music streaming service' },
-    { id: 'dstv1', name: '📺 DSTV Premium', price: 89.00, description: 'Full bouquet + sports', popular: true },
-    { id: 'dstv2', name: '📺 DSTV Compact Plus', price: 35.00, description: 'Sports + movies' },
-    { id: 'gotv1', name: '📺 GOtv Supa', price: 12.00, description: 'Budget sports package' },
+    { id: '1', name: '🎬 Netflix', suggestedPrice: 15.99, description: 'Netflix subscription' },
+    { id: '2', name: '🎵 Spotify', suggestedPrice: 10.99, description: 'Spotify Premium' },
+    { id: '3', name: '📺 YouTube Premium', suggestedPrice: 11.99, description: 'Ad-free YouTube' },
+    { id: '4', name: '🏰 Disney+', suggestedPrice: 7.99, description: 'Disney+ subscription' },
+    { id: '5', name: '🎧 Apple Music', suggestedPrice: 10.99, description: 'Apple Music subscription' },
+    { id: 'dstv1', name: '📺 DSTV', suggestedPrice: 89.00, description: 'DSTV subscription', popular: true },
+    { id: 'dstv2', name: '📺 GOtv', suggestedPrice: 12.00, description: 'GOtv subscription' },
+    { id: 'showmax1', name: '📺 Showmax', suggestedPrice: 9.99, description: 'Showmax subscription' },
   ],
   gaming: [
-    { id: '6', name: 'Roblox 1000 Robux', price: 9.99, description: 'In-game currency' },
-    { id: '7', name: 'PUBG 1800 UC', price: 24.99, description: 'PUBG Mobile currency' },
-    { id: '8', name: 'Free Fire 2200 Diamonds', price: 19.99, description: 'Free Fire currency' },
-    { id: '9', name: 'Steam $20', price: 20.00, description: 'Steam wallet gift card' },
-    { id: '10', name: 'PlayStation $25', price: 25.00, description: 'PSN gift card' },
-    { id: '11', name: 'Xbox $25', price: 25.00, description: 'Xbox gift card' },
+    { id: '6', name: '🎮 Roblox', suggestedPrice: 9.99, description: 'Robux - any amount' },
+    { id: '7', name: '🔫 PUBG Mobile', suggestedPrice: 24.99, description: 'UC coins - any amount' },
+    { id: '8', name: '💎 Free Fire', suggestedPrice: 19.99, description: 'Diamonds - any amount' },
+    { id: 'codm1', name: '🎖️ COD Mobile', suggestedPrice: 19.99, description: 'CP (CoD Points) - any amount', popular: true },
+    { id: '9', name: '🎮 Steam', suggestedPrice: 20.00, description: 'Steam wallet' },
+    { id: '10', name: '🎮 PlayStation', suggestedPrice: 25.00, description: 'PSN wallet' },
+    { id: '11', name: '🎮 Xbox', suggestedPrice: 25.00, description: 'Xbox gift card' },
+    { id: 'mobilelegends1', name: '⚔️ Mobile Legends', suggestedPrice: 15.99, description: 'Diamonds - any amount' },
   ],
   shopping: [
-    { id: 'jumia1', name: '🛍️ Jumia $25 Voucher', price: 25.00, description: 'Shop on Jumia', popular: true },
-    { id: 'jumia2', name: '🛍️ Jumia $50 Voucher', price: 50.00, description: 'Shop on Jumia', popular: true },
-    { id: 'jumia3', name: '🛍️ Jumia $100 Voucher', price: 100.00, description: 'Shop on Jumia' },
-    { id: 'temu1', name: '🛒 Temu $25 Gift Card', price: 25.00, description: 'Shop on Temu' },
-    { id: 'temu2', name: '🛒 Temu $50 Gift Card', price: 50.00, description: 'Shop on Temu' },
-    { id: 'amazon1', name: '📦 Amazon $25', price: 25.00, description: 'Amazon gift card' },
+    { id: 'jumia1', name: '🛍️ Jumia', suggestedPrice: 50.00, description: 'Jumia voucher', popular: true },
+    { id: 'konga1', name: '🛍️ Konga', suggestedPrice: 50.00, description: 'Konga voucher' },
+    { id: 'temu1', name: '🛒 Temu', suggestedPrice: 25.00, description: 'Temu gift card' },
+    { id: 'amazon1', name: '📦 Amazon', suggestedPrice: 50.00, description: 'Amazon gift card' },
+    { id: 'shein1', name: '👗 Shein', suggestedPrice: 30.00, description: 'Shein gift card' },
   ],
   transport: [
-    { id: 'uber1', name: '🚕 Uber $25 Gift Card', price: 25.00, description: 'Ride credit', popular: true },
-    { id: 'uber2', name: '🚕 Uber $50 Gift Card', price: 50.00, description: 'Ride credit' },
-    { id: 'bolt1', name: '🚗 Bolt €20 Credit', price: 22.00, description: 'Bolt ride credit' },
-    { id: 'bolt2', name: '🚗 Bolt €50 Credit', price: 55.00, description: 'Bolt ride credit' },
+    { id: 'uber1', name: '🚕 Uber', suggestedPrice: 25.00, description: 'Uber gift card', popular: true },
+    { id: 'bolt1', name: '🚗 Bolt', suggestedPrice: 20.00, description: 'Bolt credit' },
+    { id: 'indriver1', name: '🚖 inDriver', suggestedPrice: 20.00, description: 'inDriver credit' },
   ],
   social: [
-    { id: '12', name: 'TikTok 1000 Coins', price: 12.99, description: 'TikTok coins for gifts' },
-    { id: '13', name: 'X Premium', price: 8.00, description: 'Twitter/X Premium' },
-    { id: '14', name: 'Discord Nitro', price: 9.99, description: 'Discord premium features' },
-    { id: '15', name: 'Reddit Premium', price: 5.99, description: 'Ad-free Reddit' },
+    { id: '12', name: '💃 TikTok', suggestedPrice: 12.99, description: 'TikTok coins' },
+    { id: '13', name: '✖️ X Premium', suggestedPrice: 8.00, description: 'Twitter/X Premium' },
+    { id: '14', name: '💬 Discord Nitro', suggestedPrice: 9.99, description: 'Discord Nitro' },
+    { id: '15', name: '🤖 Reddit Premium', suggestedPrice: 5.99, description: 'Reddit Premium' },
   ],
   ai: [
-    { id: '16', name: 'OpenAI $50 Credits', price: 50.00, description: 'ChatGPT API credits' },
-    { id: '17', name: 'Claude API $50', price: 50.00, description: 'Anthropic Claude credits' },
-    { id: '18', name: 'GitHub Copilot', price: 10.00, description: 'AI code assistant' },
-    { id: '19', name: 'Midjourney Pro', price: 30.00, description: 'AI image generation' },
+    { id: '16', name: '🤖 ChatGPT', suggestedPrice: 20.00, description: 'OpenAI credits' },
+    { id: '17', name: '🧠 Claude', suggestedPrice: 20.00, description: 'Anthropic credits' },
+    { id: '18', name: '💻 GitHub Copilot', suggestedPrice: 10.00, description: 'AI code assistant' },
+    { id: '19', name: '🎨 Midjourney', suggestedPrice: 30.00, description: 'AI image generation' },
   ],
 };
-
 const PAYMENT_TOKENS = [
   { id: 'usdt', name: 'USDT', symbol: 'USDT', icon: '💵', recommended: true, fee: 1.5 },
   { id: 'usdc', name: 'USDC', symbol: 'USDC', icon: '💰', recommended: true, fee: 1.5 },
@@ -141,17 +137,17 @@ function App() {
   const [wallet, setWallet] = useState(null);
   const [tab, setTab] = useState('utilities');
   const [modal, setModal] = useState(null);
-  const [utilityModal, setUtilityModal] = useState(null);
   const [step, setStep] = useState('form');
   const [selectedToken, setSelectedToken] = useState('usdt');
   const [showHistory, setShowHistory] = useState(false);
   const [transactions, setTransactions] = useState([]);
+  const [customAmount, setCustomAmount] = useState('');
   const [formData, setFormData] = useState({
     country: 'nigeria',
     provider: '',
     accountNumber: '',
-    amount: '',
     phoneNumber: '',
+    email: '',
   });
 
   useEffect(() => {
@@ -180,33 +176,29 @@ function App() {
       alert('Coming soon! Stay tuned 🚀');
       return;
     }
-    if (product.type === 'electricity' || product.type === 'water' || product.type === 'internet') {
-      setUtilityModal(product);
-      setStep('form');
-      setFormData({ country: 'nigeria', provider: '', accountNumber: '', amount: '', phoneNumber: '' });
-    } else if (product.type === 'data' || product.type === 'airtime') {
-      setUtilityModal(product);
-      setStep('form');
-      setFormData({ country: 'nigeria', provider: '', accountNumber: '', amount: product.price, phoneNumber: '' });
-    } else {
-      setModal(product);
-      setStep('form');
-    }
+    setModal(product);
+    setStep('form');
+    setCustomAmount(product.suggestedPrice.toString());
+    setFormData({ country: 'nigeria', provider: '', accountNumber: '', phoneNumber: '', email: '' });
     setSelectedToken('usdt');
   };
 
   const pay = () => {
+    const amount = parseFloat(customAmount);
+    if (!amount || amount <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+
     setStep('processing');
     setTimeout(() => setStep('confirming'), 2000);
     setTimeout(() => {
-      const product = modal || utilityModal;
-      const amount = product.price === 'Variable' ? parseFloat(formData.amount) : product.price;
       const fees = calculateFees(amount, selectedToken);
       
       const transaction = {
         id: `BNT-${Date.now()}`,
         date: new Date().toISOString(),
-        product: product.name,
+        product: modal.name,
         amount: fees.amount,
         fee: fees.platformFee + fees.gasFee,
         total: fees.total,
@@ -214,13 +206,15 @@ function App() {
         chain: selectedToken === 'sol' ? 'Solana' : 'BNB Chain',
         status: 'completed',
         txHash: '0x' + Math.random().toString(16).substr(2, 64),
-        details: product.type === 'electricity' ? {
+        details: modal.type === 'electricity' ? {
           meter: formData.accountNumber,
           provider: formData.provider,
-        } : product.type === 'data' || product.type === 'airtime' ? {
+        } : modal.type === 'data' || modal.type === 'airtime' ? {
           phone: formData.phoneNumber,
           provider: formData.provider,
-        } : {},
+        } : {
+          email: formData.email,
+        },
       };
       
       saveTransaction(transaction);
@@ -231,8 +225,8 @@ function App() {
 
   const closeModal = () => {
     setModal(null);
-    setUtilityModal(null);
     setStep('form');
+    setCustomAmount('');
   };
 
   const downloadReceipt = (tx) => {
@@ -248,6 +242,7 @@ Service: ${tx.product}
 ${tx.details.meter ? `Meter: ${tx.details.meter}` : ''}
 ${tx.details.phone ? `Phone: ${tx.details.phone}` : ''}
 ${tx.details.provider ? `Provider: ${tx.details.provider}` : ''}
+${tx.details.email ? `Email: ${tx.details.email}` : ''}
 
 Amount: $${tx.amount.toFixed(2)}
 Fee: $${tx.fee.toFixed(2)}
@@ -282,8 +277,7 @@ Status: ✅ ${tx.status}
     { id: 'ai', label: '🤖 AI' },
   ];
 
-  const product = modal || utilityModal;
-  const amount = product && (product.price === 'Variable' ? parseFloat(formData.amount || 0) : product.price);
+  const amount = parseFloat(customAmount || 0);
   const fees = amount > 0 ? calculateFees(amount, selectedToken) : null;
 
   return (
@@ -303,7 +297,7 @@ Status: ✅ ${tx.status}
         }}>
           <div>
             <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>💎 BaintPay</h1>
-            <p style={{ fontSize: '12px', color: '#9ca3af' }}>Pay Bills Instantly</p>
+            <p style={{ fontSize: '12px', color: '#9ca3af' }}>Pay Any Amount, Anywhere</p>
           </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             {wallet && (
@@ -353,10 +347,10 @@ Status: ✅ ${tx.status}
 
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '16px' }}>
-            Pay Bills. Anywhere. Instantly.
+            Pay Any Bill. Any Amount. Instantly.
           </h2>
           <p style={{ color: '#d1d5db', fontSize: '16px', marginBottom: '8px' }}>
-            Electricity, data, streaming, shopping and more with crypto
+            Custom amounts for every service. Works in every country. 🌍
           </p>
           <div style={{ 
             display: 'inline-flex', 
@@ -468,11 +462,10 @@ Status: ✅ ${tx.status}
                 alignItems: 'center'
               }}>
                 <span style={{ 
-                  fontSize: '18px', 
-                  fontWeight: 'bold',
-                  color: '#4ade80'
+                  fontSize: '14px', 
+                  color: '#9ca3af'
                 }}>
-                  {typeof p.price === 'number' ? '$' + p.price.toFixed(2) : p.price}
+                  From ${p.suggestedPrice}
                 </span>
                 <button
                   onClick={() => buy(p)}
@@ -494,7 +487,7 @@ Status: ✅ ${tx.status}
           ))}
         </div>
 
-        {/* Regular Products Modal */}
+        {/* Payment Modal */}
         {modal && (
           <div style={{
             position: 'fixed',
@@ -524,223 +517,35 @@ Status: ✅ ${tx.status}
                   </div>
                   <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '16px' }}>{modal.description}</p>
 
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Pay with</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
-                      {PAYMENT_TOKENS.map(token => (
-                        <button
-                          key={token.id}
-                          onClick={() => setSelectedToken(token.id)}
-                          style={{
-                            padding: '12px',
-                            background: selectedToken === token.id ? 'rgba(168,85,247,0.2)' : 'rgba(255,255,255,0.05)',
-                            border: selectedToken === token.id ? '1px solid rgba(168,85,247,0.5)' : '1px solid rgba(255,255,255,0.1)',
-                            borderRadius: '8px',
-                            color: 'white',
-                            cursor: 'pointer',
-                            position: 'relative'
-                          }}
-                        >
-                          {token.recommended && (
-                            <div style={{
-                              position: 'absolute',
-                              top: '4px',
-                              right: '4px',
-                              background: '#22c55e',
-                              padding: '2px 6px',
-                              borderRadius: '4px',
-                              fontSize: '9px',
-                              fontWeight: 'bold'
-                            }}>
-                              BEST
-                            </div>
-                          )}
-                          <div style={{ fontSize: '24px', marginBottom: '4px' }}>{token.icon}</div>
-                          <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{token.name}</div>
-                          <div style={{ fontSize: '11px', color: '#9ca3af' }}>{token.fee}% fee</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {fees && (
-                    <div style={{
-                      background: 'rgba(255,255,255,0.05)',
-                      padding: '16px',
-                      borderRadius: '12px',
-                      marginBottom: '16px',
-                      border: '1px solid rgba(255,255,255,0.1)'
-                    }}>
-                      <h3 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '12px' }}>Payment Breakdown</h3>
-                      <div style={{ fontSize: '13px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: '#9ca3af' }}>Bill Amount:</span>
-                        <span>${fees.amount.toFixed(2)}</span>
+                  {/* Country Selection - Only for utilities and mobile */}
+                  {(modal.type === 'electricity' || modal.type === 'data' || modal.type === 'airtime') && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Select Country</label>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                        {Object.entries(COUNTRIES).map(([key, country]) => (
+                          <button
+                            key={key}
+                            onClick={() => setFormData({...formData, country: key, provider: ''})}
+                            style={{
+                              padding: '12px',
+                              background: formData.country === key ? 'rgba(168,85,247,0.2)' : 'rgba(255,255,255,0.05)',
+                              border: formData.country === key ? '1px solid rgba(168,85,247,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                              borderRadius: '8px',
+                              color: 'white',
+                              cursor: 'pointer',
+                              fontSize: '12px'
+                            }}
+                          >
+                            <div style={{ fontSize: '24px', marginBottom: '4px' }}>{country.flag}</div>
+                            <div style={{ fontWeight: 'bold' }}>{country.name}</div>
+                          </button>
+                        ))}
                       </div>
-                      <div style={{ fontSize: '13px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: '#9ca3af' }}>Platform Fee ({PAYMENT_TOKENS.find(t => t.id === selectedToken).fee}%):</span>
-                        <span>${fees.platformFee.toFixed(2)}</span>
-                      </div>
-                      <div style={{ fontSize: '13px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: '#9ca3af' }}>Gas Fee (est.):</span>
-                        <span>${fees.gasFee.toFixed(2)}</span>
-                      </div>
-                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px' }}>
-                        <div style={{ fontSize: '16px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Total:</span>
-                          <span style={{ color: '#4ade80' }}>{fees.total.toFixed(2)} {fees.token}</span>
-                        </div>
-                      </div>
-                      {fees.savings > 0 && (
-                        <div style={{ 
-                          marginTop: '8px', 
-                          padding: '8px', 
-                          background: 'rgba(34,197,94,0.1)', 
-                          borderRadius: '6px',
-                          fontSize: '12px',
-                          color: '#4ade80'
-                        }}>
-                          💰 You save ${fees.savings.toFixed(2)} with stablecoins!
-                        </div>
-                      )}
                     </div>
                   )}
 
-                  <button
-                    onClick={pay}
-                    style={{
-                      width: '100%',
-                      padding: '16px',
-                      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: '16px',cursor: 'pointer'
-                    }}
-                  >
-                    Pay Now
-                  </button>
-                </>
-              )}
-
-              {step === 'processing' && (
-                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-                  <div style={{
-                    width: '80px',
-                    height: '80px',
-                    border: '4px solid rgba(168,85,247,0.2)',
-                    borderTop: '4px solid #9333ea',
-                    borderRadius: '50%',
-                    margin: '0 auto 24px',
-                    animation: 'spin 1s linear infinite'
-                  }}></div>
-                  <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>Processing Payment</h3>
-                  <p style={{ color: '#9ca3af', fontSize: '14px' }}>Preparing transaction...</p>
-                </div>
-              )}
-
-              {step === 'confirming' && (
-                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-                  <div style={{
-                    width: '80px',
-                    height: '80px',
-                    border: '4px solid rgba(168,85,247,0.2)',
-                    borderTop: '4px solid #9333ea',
-                    borderRadius: '50%',
-                    margin: '0 auto 24px',
-                    animation: 'spin 1s linear infinite'
-                  }}></div>
-                  <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>Confirming on Chain</h3>
-                  <p style={{ color: '#9ca3af', fontSize: '14px' }}>Waiting for blockchain confirmation...</p>
-                </div>
-              )}
-
-              {step === 'success' && (
-                <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-                  <div style={{ fontSize: '64px', marginBottom: '16px' }}>✅</div>
-                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#22c55e' }}>Payment Successful!</h3>
-                  <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '24px' }}>
-                    Your {modal.name} has been activated
-                  </p>
-                  <button
-                    onClick={closeModal}
-                    style={{
-                      width: '100%',
-                      padding: '16px',
-                      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: '16px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Done
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Utility Bills Modal (Electricity, Data, Airtime) */}
-        {utilityModal && (
-          <div style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px',
-            zIndex: 50
-          }}>
-            <div style={{
-              background: '#1e293b',
-              borderRadius: '16px',
-              padding: '24px',
-              maxWidth: '400px',
-              width: '100%',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              border: '1px solid rgba(168,85,247,0.3)'
-            }}>
-              {step === 'form' && (
-                <>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                    <h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>{utilityModal.name}</h2>
-                    <button onClick={closeModal} style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: '24px', cursor: 'pointer' }}>×</button>
-                  </div>
-                  <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '16px' }}>{utilityModal.description}</p>
-
-                  {/* Country Selection */}
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Select Country</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
-                      {Object.entries(COUNTRIES).map(([key, country]) => (
-                        <button
-                          key={key}
-                          onClick={() => setFormData({...formData, country: key, provider: ''})}
-                          style={{
-                            padding: '12px',
-                            background: formData.country === key ? 'rgba(168,85,247,0.2)' : 'rgba(255,255,255,0.05)',
-                            border: formData.country === key ? '1px solid rgba(168,85,247,0.5)' : '1px solid rgba(255,255,255,0.1)',
-                            borderRadius: '8px',
-                            color: 'white',
-                            cursor: 'pointer',
-                            fontSize: '12px'
-                          }}
-                        >
-                          <div style={{ fontSize: '24px', marginBottom: '4px' }}>{country.flag}</div>
-                          <div style={{ fontWeight: 'bold' }}>{country.name}</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Provider Selection */}
-                  {utilityModal.type === 'electricity' && (
+                  {/* Provider Selection for Electricity */}
+                  {modal.type === 'electricity' && (
                     <div style={{ marginBottom: '16px' }}>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Select Provider</label>
                       <select
@@ -764,7 +569,8 @@ Status: ✅ ${tx.status}
                     </div>
                   )}
 
-                  {(utilityModal.type === 'data' || utilityModal.type === 'airtime') && (
+                  {/* Network Selection for Mobile */}
+                  {(modal.type === 'data' || modal.type === 'airtime') && (
                     <div style={{ marginBottom: '16px' }}>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Select Network</label>
                       <select
@@ -788,8 +594,8 @@ Status: ✅ ${tx.status}
                     </div>
                   )}
 
-                  {/* Account Number / Phone Number */}
-                  {utilityModal.type === 'electricity' && (
+                  {/* Meter Number for Electricity */}
+                  {modal.type === 'electricity' && (
                     <div style={{ marginBottom: '16px' }}>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Meter Number</label>
                       <input
@@ -810,7 +616,8 @@ Status: ✅ ${tx.status}
                     </div>
                   )}
 
-                  {(utilityModal.type === 'data' || utilityModal.type === 'airtime') && (
+                  {/* Phone Number for Mobile */}
+                  {(modal.type === 'data' || modal.type === 'airtime') && (
                     <div style={{ marginBottom: '16px' }}>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Phone Number</label>
                       <input
@@ -831,16 +638,15 @@ Status: ✅ ${tx.status}
                     </div>
                   )}
 
-                  {/* Amount Input (for variable price items) */}
-                  {utilityModal.price === 'Variable' && (
+                  {/* Email for Subscriptions */}
+                  {!modal.type && (
                     <div style={{ marginBottom: '16px' }}>
-                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Amount ($)</label>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Email (Optional)</label>
                       <input
-                        type="number"
-                        value={formData.amount}
-                        onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                        placeholder="Enter amount"
-                        min="1"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData,email: e.target.value})}
+                        placeholder="Enter email for delivery"
                         style={{
                           width: '100%',
                           padding: '12px',
@@ -853,6 +659,34 @@ Status: ✅ ${tx.status}
                       />
                     </div>
                   )}
+
+                  {/* Custom Amount Input - FOR EVERYONE */}
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
+                      Enter Amount ($)
+                    </label>
+                    <input
+                      type="number"
+                      value={customAmount}
+                      onChange={(e) => setCustomAmount(e.target.value)}
+                      placeholder={`Suggested: $${modal.suggestedPrice}`}
+                      min="1"
+                      step="0.01"
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '8px',
+                        color: 'white',
+                        fontSize: '16px',
+                        fontWeight: 'bold'
+                      }}
+                    />
+                    <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>
+                      💡 Typical price: ${modal.suggestedPrice} (adjust to your needs)
+                    </p>
+                  </div>
 
                   {/* Payment Token Selection */}
                   <div style={{ marginBottom: '16px' }}>
@@ -905,7 +739,7 @@ Status: ✅ ${tx.status}
                     }}>
                       <h3 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '12px' }}>Payment Breakdown</h3>
                       <div style={{ fontSize: '13px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: '#9ca3af' }}>Bill Amount:</span>
+                        <span style={{ color: '#9ca3af' }}>Amount:</span>
                         <span>${fees.amount.toFixed(2)}</span>
                       </div>
                       <div style={{ fontSize: '13px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
@@ -939,18 +773,18 @@ Status: ✅ ${tx.status}
 
                   <button
                     onClick={pay}
-                    disabled={!formData.provider || (utilityModal.type === 'electricity' && !formData.accountNumber) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber) || (utilityModal.price === 'Variable' && !formData.amount)}
+                    disabled={!customAmount || parseFloat(customAmount) <= 0}
                     style={{
                       width: '100%',
                       padding: '16px',
-                      background: (!formData.provider || (utilityModal.type === 'electricity' && !formData.accountNumber) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber) || (utilityModal.price === 'Variable' && !formData.amount)) ? '#6b7280' : 'linear-gradient(135deg, #9333ea, #ec4899)',
+                      background: (!customAmount || parseFloat(customAmount) <= 0) ? '#6b7280' : 'linear-gradient(135deg, #9333ea, #ec4899)',
                       border: 'none',
                       borderRadius: '8px',
                       color: 'white',
                       fontWeight: 'bold',
                       fontSize: '16px',
-                      cursor: (!formData.provider || (utilityModal.type === 'electricity' && !formData.accountNumber) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber) || (utilityModal.price === 'Variable' && !formData.amount)) ? 'not-allowed' : 'pointer',
-                      opacity: (!formData.provider || (utilityModal.type === 'electricity' && !formData.accountNumber) || ((utilityModal.type === 'data' || utilityModal.type === 'airtime') && !formData.phoneNumber) || (utilityModal.price === 'Variable' && !formData.amount)) ? 0.5 : 1
+                      cursor: (!customAmount || parseFloat(customAmount) <= 0) ? 'not-allowed' : 'pointer',
+                      opacity: (!customAmount || parseFloat(customAmount) <= 0) ? 0.5 : 1
                     }}
                   >
                     Pay Now
@@ -994,8 +828,11 @@ Status: ✅ ${tx.status}
                 <div style={{ textAlign: 'center', padding: '40px 20px' }}>
                   <div style={{ fontSize: '64px', marginBottom: '16px' }}>✅</div>
                   <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#22c55e' }}>Payment Successful!</h3>
-                  <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '24px' }}>
-                    Your {utilityModal.name} payment has been processed
+                  <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '8px' }}>
+                    ${parseFloat(customAmount).toFixed(2)} paid for {modal.name}
+                  </p>
+                  <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '24px' }}>
+                    Transaction will be processed within 5 minutes
                   </p>
                   <button
                     onClick={closeModal}
@@ -1053,6 +890,7 @@ Status: ✅ ${tx.status}
                 <div style={{ textAlign: 'center', padding: '40px 20px', color: '#9ca3af' }}>
                   <div style={{ fontSize: '48px', marginBottom: '16px' }}>📋</div>
                   <p>No transactions yet</p>
+                  <p style={{ fontSize: '12px', marginTop: '8px' }}>Your payment history will appear here</p>
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -1069,7 +907,9 @@ Status: ✅ ${tx.status}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '8px' }}>
                         <div>
                           <h3 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '4px' }}>{tx.product}</h3>
-                          <p style={{ fontSize: '12px', color: '#9ca3af' }}>{new Date(tx.date).toLocaleDateString()}</p>
+                          <p style={{ fontSize: '12px', color: '#9ca3af' }}>
+                            {new Date(tx.date).toLocaleDateString()} {new Date(tx.date).toLocaleTimeString()}
+                          </p>
                         </div>
                         <div style={{
                           padding: '4px 8px',
@@ -1077,7 +917,8 @@ Status: ✅ ${tx.status}
                           border: '1px solid rgba(34,197,94,0.3)',
                           borderRadius: '6px',
                           fontSize: '11px',
-                          color: '#4ade80'
+                          color: '#4ade80',
+                          textTransform: 'uppercase'
                         }}>
                           {tx.status}
                         </div>
@@ -1098,10 +939,19 @@ Status: ✅ ${tx.status}
                           Provider: {tx.details.provider}
                         </p>
                       )}
+                      {tx.details.email && (
+                        <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>
+                          Email: {tx.details.email}
+                        </p>
+                      )}
                       
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                         <span style={{ fontSize: '13px', color: '#9ca3af' }}>Amount:</span>
                         <span style={{ fontSize: '13px' }}>${tx.amount.toFixed(2)}</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '13px', color: '#9ca3af' }}>Fees:</span>
+                        <span style={{ fontSize: '13px' }}>${tx.fee.toFixed(2)}</span>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                         <span style={{ fontSize: '13px', color: '#9ca3af' }}>Total Paid:</span>
