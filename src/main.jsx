@@ -19,7 +19,8 @@ const PRODUCTS = {
   utilities: [
     { id: 'elec1', name: '⚡ Electricity Bill', type: 'electricity', suggestedPrice: 50, description: 'Pay your power bill instantly' },
     { id: 'water1', name: '💧 Water Bill', type: 'water', suggestedPrice: 30, description: 'Pay water bills', comingSoon: true },
-    { id: 'internet1', name: '📡 Internet/WiFi Bill', type: 'internet', suggestedPrice: 40, description: 'Pay internet providers', comingSoon: true },
+    { id: 'internet1', name: '📡 Internet/WiFi Bill', type: 'internet', suggestedPrice: 40, description: 'Pay internet providers' },
+    { id: 'starlink1', name: '🛰️ Starlink', type: 'internet', suggestedPrice: 110.00, description: 'Starlink internet subscription', popular: true },
   ],
   mobile: [
     { id: 'data1', name: '📱 Mobile Data', type: 'data', suggestedPrice: 10, description: 'Buy data bundle - any amount' },
@@ -45,6 +46,15 @@ const PRODUCTS = {
     { id: '11', name: '🎮 Xbox', suggestedPrice: 25.00, description: 'Xbox gift card' },
     { id: 'mobilelegends1', name: '⚔️ Mobile Legends', suggestedPrice: 15.99, description: 'Diamonds - any amount' },
   ],
+  betting: [
+    { id: 'sportybet1', name: '⚽ Sportybet', suggestedPrice: 50.00, description: 'Fund your Sportybet wallet', popular: true },
+    { id: 'bet9ja1', name: '🎲 Bet9ja', suggestedPrice: 50.00, description: 'Top up Bet9ja account', popular: true },
+    { id: 'betking1', name: '👑 BetKing', suggestedPrice: 30.00, description: 'Fund BetKing wallet' },
+    { id: 'polymarket1', name: '📊 Polymarket', suggestedPrice: 100.00, description: 'Prediction market deposits' },
+    { id: '1xbet1', name: '🎰 1xBet', suggestedPrice: 50.00, description: 'Fund 1xBet account' },
+    { id: 'betway1', name: '🏆 Betway', suggestedPrice: 40.00, description: 'Top up Betway wallet' },
+    { id: 'msport1', name: '⚡ MSport', suggestedPrice: 30.00, description: 'Fund MSport account' },
+  ],
   shopping: [
     { id: 'jumia1', name: '🛍️ Jumia', suggestedPrice: 50.00, description: 'Jumia voucher', popular: true },
     { id: 'konga1', name: '🛍️ Konga', suggestedPrice: 50.00, description: 'Konga voucher' },
@@ -62,12 +72,16 @@ const PRODUCTS = {
     { id: '13', name: '✖️ X Premium', suggestedPrice: 8.00, description: 'Twitter/X Premium' },
     { id: '14', name: '💬 Discord Nitro', suggestedPrice: 9.99, description: 'Discord Nitro' },
     { id: '15', name: '🤖 Reddit Premium', suggestedPrice: 5.99, description: 'Reddit Premium' },
+    { id: 'twitch1', name: '🎮 Twitch', suggestedPrice: 4.99, description: 'Twitch subscription' },
+    { id: 'twitch2', name: '💜 Twitch Turbo', suggestedPrice: 11.99, description: 'Ad-free Twitch experience' },
   ],
   ai: [
     { id: '16', name: '🤖 ChatGPT', suggestedPrice: 20.00, description: 'OpenAI credits' },
     { id: '17', name: '🧠 Claude', suggestedPrice: 20.00, description: 'Anthropic credits' },
+    { id: 'gemini1', name: '✨ Google Gemini', suggestedPrice: 20.00, description: 'Gemini Advanced subscription', popular: true },
     { id: '18', name: '💻 GitHub Copilot', suggestedPrice: 10.00, description: 'AI code assistant' },
     { id: '19', name: '🎨 Midjourney', suggestedPrice: 30.00, description: 'AI image generation' },
+    { id: 'perplexity1', name: '🔍 Perplexity Pro', suggestedPrice: 20.00, description: 'AI search engine' },
   ],
 };
 const PAYMENT_TOKENS = [
@@ -267,15 +281,16 @@ Status: ✅ ${tx.status}
   };
 
   const tabs = [
-    { id: 'utilities', label: '💡 Utilities' },
-    { id: 'mobile', label: '📱 Mobile' },
-    { id: 'entertainment', label: '🎬 Entertainment' },
-    { id: 'gaming', label: '🎮 Gaming' },
-    { id: 'shopping', label: '🛍️ Shopping' },
-    { id: 'transport', label: '🚕 Transport' },
-    { id: 'social', label: '💬 Social' },
-    { id: 'ai', label: '🤖 AI' },
-  ];
+  { id: 'utilities', label: '💡 Bills & Internet' },  // Updated
+  { id: 'mobile', label: '📱 Mobile' },
+  { id: 'entertainment', label: '🎬 Entertainment' },
+  { id: 'gaming', label: '🎮 Gaming' },
+  { id: 'betting', label: '🎰 Betting' },
+  { id: 'shopping', label: '🛍️ Shopping' },
+  { id: 'transport', label: '🚕 Transport' },
+  { id: 'social', label: '💬 Social' },
+  { id: 'ai', label: '🤖 AI' },
+];
 
   const amount = parseFloat(customAmount || 0);
   const fees = amount > 0 ? calculateFees(amount, selectedToken) : null;
